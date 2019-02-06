@@ -1,0 +1,3 @@
+# LegendaryChest
+
+Legendary Chest.
