@@ -35,6 +35,7 @@ include $(DEVKITARM)/3ds_rules
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
 CITRA		:= C:/Users/Nicolas/AppData/Local/Citra/canary-mingw/citra-qt.exe 
+CITRA-NOGUI	:= C:/Users/Nicolas/AppData/Local/Citra/canary-mingw/citra.exe 
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
@@ -166,18 +167,21 @@ all:
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf banner.bin
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf Misc/banner.bin $(TARGET).cia
 
 run :
 	$(CITRA) $(TARGET).3dsx
+
+run-nogui :
+	$(CITRA-NOGUI) $(TARGET).3dsx
 online:
 	3dslink $(TARGET).3dsx -a 192.168.0.10
 
-cia : banner.bin desc.rsf 
-	makerom -f cia -o $(TARGET).cia -rsf desc.rsf -target t -exefslogo -elf $(TARGET).elf -icon $(TARGET).smdh -banner banner.bin
+cia : Misc/banner.bin Misc/desc.rsf 
+	makerom -f cia -o $(TARGET).cia -rsf Misc/desc.rsf -target t -exefslogo -elf $(TARGET).elf -icon $(TARGET).smdh -banner Misc/banner.bin
 
-banner : 
-	bannertool makebanner -i Banner/Banner.png -a Banner/Banner.wav -o banner.bin
+banner.bin : 
+	bannertool makebanner -i Banner/Banner.png -a Banner/Banner.wav -o Misc/banner.bin
 
 install :
 	Utils/Boop.exe $(TARGET).cia

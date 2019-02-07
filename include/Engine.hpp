@@ -11,10 +11,11 @@
 #define SCREEN_FPS          60
 
 //GAMESTATES
-#define StartMenu   0
-#define OptionMenu  1
-#define InGame      2
-#define Credits     3
+#define S_StartMenu   0
+#define S_OptionMenu  1
+#define S_InGame      2
+#define S_Credits     3
+#define S_Intro       4
 
 class Engine
 {
@@ -26,7 +27,9 @@ class Engine
         void Input();
         void Quit();
 
+        void ClearScreen();
 
+        int GameState;
         bool running;
 
         //Graphics
@@ -39,6 +42,7 @@ class Engine
 
         //GameStates
         void Intro();
+        void StartMenu();
         int mouseX;
         int mouseY;
 
@@ -46,7 +50,7 @@ class Engine
         
 
     private:
-        int GameState;
+        
         Uint32 ClearColor;
         SDL_Surface* IntroImage;
         Mix_Music* CastleSong;

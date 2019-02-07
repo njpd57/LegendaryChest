@@ -24,6 +24,8 @@ Engine::Engine()
     SDL_FillRect(screen,&screenRect,ClearColor);
     SDL_Flip(screen);
 
+	GameState=S_Intro;
+
 	//FADEOUT/FADEIN
 
 	
@@ -49,12 +51,23 @@ void Engine::Quit()
 //GameStates
 void Engine::Intro()
 {
-    CastleSong=Mix_LoadMUS("romfs:/Music/Castle.wav");
     IntroImage=loadImage("romfs:/Graphics/Logos/studioLogo.png");
     applySurface(0,0,IntroImage,screen);
-    Mix_PlayMusic(CastleSong,-1);
+	SDL_Flip(screen);
+	bool Done(false);
+	while(!Done)
+	{
+		SDL_Delay(5000);
+		Done=true;
+	}
+	if(Done)GameState=S_StartMenu;
 }
 
+void Engine::StartMenu()
+{
+	ClearScreen();
+	
+}
 void Engine::Input()
 {
     SDL_Event event;
@@ -127,7 +140,11 @@ void Engine::Input()
 		} 
 }
 
-
+void Engine::ClearScreen()
+{
+	SDL_FillRect(screen,&screenRect,ClearColor);
+	SDL_Flip(screen);
+}
 void Engine::fadeOut()
 {
 	F_Alpha=255;

@@ -3,11 +3,26 @@
 int main(void)
 {
 	Engine MainEngine;
-	MainEngine.Intro();
 
 	while(MainEngine.running)
 	{
-		MainEngine.Input();
+		switch(MainEngine.GameState)
+		{
+			case S_StartMenu:
+				MainEngine.StartMenu();
+				break;
+			case S_OptionMenu:
+				break;
+			case S_InGame:
+				break;
+			case S_Credits:
+				break;
+			case S_Intro:
+				MainEngine.Intro();
+				break;
+			default:
+				break;
+		}
 		SDL_Flip(MainEngine.screen);
 	}
 
