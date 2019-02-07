@@ -20,6 +20,9 @@ int main(void)
 			case S_Intro:
 				MainEngine.Intro();
 				break;
+			case S_Battle:
+				MainEngine.Battle_Demo();
+				break;
 			default:
 				break;
 		}

@@ -1,5 +1,6 @@
 #include "SDLUtility.hpp"
 #include "Engine.hpp"
+#include "Npc.hpp"
 
 
 Engine::Engine()
@@ -60,13 +61,20 @@ void Engine::Intro()
 		SDL_Delay(5000);
 		Done=true;
 	}
-	if(Done)GameState=S_StartMenu;
+	if(Done)GameState=S_Battle;
 }
 
 void Engine::StartMenu()
 {
 	ClearScreen();
-	
+	SDL_Surface* MenuScreen=loadImage("romfs:/Graphics/Ui/WhiteLaion.png");
+	applySurface(0,0,MenuScreen,screen);
+	SDL_Flip(screen);
+	bool Done(false);
+	while(!Done)
+	{
+		SDL_Delay(3000);
+	}
 }
 void Engine::Input()
 {
@@ -138,6 +146,39 @@ void Engine::Input()
 					break;
 			}
 		} 
+}
+void Engine::Battle_Demo()
+{
+	npc Slime(32,32,5);
+	Slime.SetImage("romfs:/Graphics/Sprites/Slime.png");
+
+	ClearScreen();
+	SDL_Surface* BattleBack=loadImage("romfs:/Graphics/Battlebacks/Forres_fxt.png");
+	applySurface(0,0,BattleBack,screen);
+	SDL_Flip(screen);
+	bool BattleDone(false);
+	while(!BattleDone)
+	{
+		for(int j=0;j<=50;j++)
+		{
+		for(int i=0;i<=Slime.frames;i++)
+		{
+			applySurface(64,176,Slime.npcSurface,screen,&Slime.npcFrame[i]);
+			SDL_Flip(screen);
+			SDL_Delay(45);
+		}
+		}
+		BattleDone=true;
+	}
+	if(BattleDone)
+	{
+		ClearScreen();
+		SDL_FreeSurface(BattleBack);
+		SDL_FreeSurface(Slime.npcSurface);
+		SDL_Delay(1000);
+		SDL_Flip(screen);
+		running=false;
+	}
 }
 
 void Engine::ClearScreen()

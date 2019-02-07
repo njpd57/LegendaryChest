@@ -43,7 +43,7 @@
         {
             "label": "Make Banner",
             "type": "shell",
-            "command": "make banner",
+            "command": "make banner.bin",
             "problemMatcher": []
         },
         {

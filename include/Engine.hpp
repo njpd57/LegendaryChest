@@ -17,6 +17,10 @@
 #define S_Credits     3
 #define S_Intro       4
 
+#define S_Battle      5
+#define S_Indoor      6
+#define S_Map         7
+
 class Engine
 {
     public:
@@ -43,10 +47,13 @@ class Engine
         //GameStates
         void Intro();
         void StartMenu();
+        void Indoor();
+        void Battle_Demo();
         int mouseX;
         int mouseY;
 
         int frame;
+
         
 
     private:
