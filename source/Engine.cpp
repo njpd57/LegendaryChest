@@ -1,6 +1,8 @@
 #include "SDLUtility.hpp"
 #include "Engine.hpp"
 #include "Npc.hpp"
+#include "Database.hpp"
+
 
 
 Engine::Engine()
@@ -10,10 +12,11 @@ Engine::Engine()
     TTF_Init();
     IMG_Init(IMG_INIT_PNG);
     Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,4096);
+	
 
     SDL_ShowCursor(SDL_DISABLE);
     screen      = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_DUALSCR |SDL_FITHEIGHT);// SDL_FITWIDTH);
-    running     = true;
+    
     screenRect.x= 0;
     screenRect.y= 0;
     screenRect.w= SCREEN_WIDTH;
@@ -25,7 +28,7 @@ Engine::Engine()
     SDL_FillRect(screen,&screenRect,ClearColor);
     SDL_Flip(screen);
 
-	GameState=S_Intro;
+	GameState=S_StartMenu;
 
 	//FADEOUT/FADEIN
 
@@ -35,12 +38,18 @@ Engine::Engine()
 
 }
 
-void Engine::Init(){};
+void Engine::Init()
+{
+	loadNpc();
+	LoadImages();
+	gameTitleFrame=0;
+	running     = true;
+	
+};
 
 void Engine::Quit()
 {
-    SDL_FreeSurface(IntroImage);
-    Mix_FreeMusic(CastleSong);
+	SDL_FreeSurface(gameTitle);
 
     TTF_CloseFont(font);
     TTF_Quit();    
@@ -49,19 +58,35 @@ void Engine::Quit()
     SDL_Quit();
 }
 
+void Engine::GameLoop()
+{
+	ClearScreen();
+	while(running)
+	{
+		while(SDL_PollEvent(&E_event))
+		{
+			Input();
+		}		
+		Update();
+		Render();
+	}
+}
 //GameStates
 void Engine::Intro()
 {
-    IntroImage=loadImage("romfs:/Graphics/Logos/studioLogo.png");
+	IntroImage=loadImage("romfs:/Graphics/Logos/studioLogo.png");
     applySurface(0,0,IntroImage,screen);
 	SDL_Flip(screen);
 	bool Done(false);
 	while(!Done)
 	{
-		SDL_Delay(5000);
+		SDL_Delay(3000);
 		Done=true;
 	}
-	if(Done)GameState=S_Battle;
+	if(Done)
+	{
+		SDL_FreeSurface(IntroImage);
+	}
 }
 
 void Engine::StartMenu()
@@ -78,98 +103,61 @@ void Engine::StartMenu()
 }
 void Engine::Input()
 {
-    SDL_Event event;
-
-	while(SDL_PollEvent(&event))
-	    {
-			switch(event.type)
-			{
-				case SDL_KEYDOWN:
-				
-					switch(event.key.keysym.sym)
-					{
-						case SDLK_a:
-							if(Mix_PausedMusic() == 1)
-							{
-								Mix_ResumeMusic();
-							}
-							else Mix_PauseMusic();
-							break;
-						case SDLK_b:
-
-							
-							break;
-						case SDLK_x:
-							
-							break;
-						case SDLK_y:
-							
-							break;
-						case SDLK_l:
-							
-							break;
-						case SDLK_r:
-							
-							break;
-						case SDLK_RETURN:
-							
-							running=false;
-							break;
-						case SDLK_ESCAPE:
-							
-							break;
-						case SDLK_LEFT:
-							
-							break;
-						case SDLK_RIGHT:
-							
-							break;
-						case SDLK_UP:
-							
-							break;
-						case SDLK_DOWN:
-							
-							break;
-						default:
-							break;
-					}					
-					break;
-				case SDL_KEYUP:
-					break;
-				case SDL_MOUSEMOTION:
-					mouseX=event.motion.x;
-					mouseY=event.motion.y;
-					break;
-				case SDL_MOUSEBUTTONDOWN:
-					if(event.button.button == SDL_BUTTON_LEFT)running=false;
-				default:
-					break;
-			}
-		} 
+	switch(GameState)
+	{
+		case S_StartMenu:
+			break;
+		default:
+			break;
+	}
+}
+void Engine::Update()
+{
+	switch(GameState)
+	{
+		case S_StartMenu:
+			applySurface(0,85,gameTitle,screen,&gameTitleRect[gameTitleFrame]);//gameTitleFrame]);			
+			gameTitleFrame++;
+			if(gameTitleFrame>=10)gameTitleFrame=0;
+			break;
+		default:
+			break;
+	}
+}
+void Engine::Render()
+{
+	SDL_Flip(screen);
 }
 void Engine::Battle_Demo()
 {
-	npc Slime(32,32,5);
-	Slime.SetImage("romfs:/Graphics/Sprites/Slime.png");
-
+	
+	Slime.SetXY(64,176);
+	SlimePlayer.SetXY(256,176);
 	ClearScreen();
 	SDL_Surface* BattleBack=loadImage("romfs:/Graphics/Battlebacks/Forres_fxt.png");
 	applySurface(0,0,BattleBack,screen);
 	SDL_Flip(screen);
 	bool BattleDone(false);
+	int i,j;
 	while(!BattleDone)
 	{
-		for(int j=0;j<=50;j++)
+		j++;
+		if(j>=3)
 		{
-		for(int i=0;i<=Slime.frames;i++)
-		{
-			applySurface(64,176,Slime.npcSurface,screen,&Slime.npcFrame[i]);
-			SDL_Flip(screen);
-			SDL_Delay(45);
+			j=0;
+			i++;
 		}
-		}
-		BattleDone=true;
+		if(i>=5)i=0;
+		applySurface(0,0,BattleBack,screen);
+		applySurface(Slime.x,Slime.y,Slime.npcSurface,screen,&Slime.npcFrame[i]);
+		applySurface(SlimePlayer.x,SlimePlayer.y,SlimePlayer.npcSurface,screen,&SlimePlayer.npcFrame[i]);
+		Slime.x++;
+		if(Slime.x>=400)Slime.x=0;
+		SDL_Flip(screen);
 	}
+	
+	BattleDone=true;
+
 	if(BattleDone)
 	{
 		ClearScreen();
@@ -199,4 +187,74 @@ void Engine::fadeOut()
 	while(!F_Done)
 	{
 	}
+}
+
+
+//INPUT
+/*
+void Engine::Menu_Input()
+{
+	switch(E_event.type)
+	{
+		case SDL_KEYDOWN:		
+			switch(E_event.key.keysym.sym)
+			{
+				case SDLK_a:
+						break;
+				case SDLK_b:					
+						break;
+				case SDLK_x:			
+						break;
+				case SDLK_y:
+						break;
+				case SDLK_l:		
+						break;
+				case SDLK_r:			
+						break;
+				case SDLK_RETURN:			
+						break;
+				case SDLK_ESCAPE:			
+						break;
+				case SDLK_LEFT:
+						break;
+				case SDLK_RIGHT:	
+						break;
+				case SDLK_UP:	
+						break;
+				case SDLK_DOWN:	
+						break;
+				default:
+						break;
+			}					
+			break;
+		case SDL_KEYUP:
+				break;
+		case SDL_MOUSEMOTION:
+				mouseX=E_event.motion.x;
+				mouseY=E_event.motion.y;
+				break;
+		case SDL_MOUSEBUTTONDOWN:
+				//if(event.button.button == SDL_BUTTON_LEFT)break;
+				break;
+		default:
+				break;
+	}
+}
+*/
+
+//LoadImages
+void Engine::LoadImages()
+{
+
+	gameTitle=loadImage("romfs:/Graphics/Logos/gameTitle.png");
+	
+	for(int i=0;i<=10;i++)
+	{
+		gameTitleRect[i].w = 400;
+		gameTitleRect[i].h = 70;
+		gameTitleRect[i].x = 0;
+		gameTitleRect[i].y = i*70;
+	};
+
+	
 }

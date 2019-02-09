@@ -3,6 +3,7 @@
 #define ENGINE_H
 
 
+
 //Game System Options
 #define SCREEN_HEIGHT       480
 #define SCREEN_WIDTH        400
@@ -30,7 +31,7 @@ class Engine
         void Update();
         void Input();
         void Quit();
-
+        void GameLoop();
         void ClearScreen();
 
         int GameState;
@@ -45,16 +46,32 @@ class Engine
         SDL_Color TextColor;
 
         //GameStates
-        void Intro();
-        void StartMenu();
-        void Indoor();
-        void Battle_Demo();
+
+            void Intro();
+
+
+            void StartMenu();
+            SDL_Surface* gameTitle;
+            SDL_Rect     gameTitleRect[10];
+            int          gameTitleFrame;
+
+            void Indoor();
+
+            void Battle_Demo();
+
+            
         int mouseX;
         int mouseY;
-
         int frame;
 
+        void LoadImages();
         
+        //Time
+        Uint32 start;
+
+        //Input
+        void Menu_Input();
+
 
     private:
         
@@ -72,6 +89,8 @@ class Engine
         void fadeIn();
         void fadeOut();
 
+        //Event Sys
+        SDL_Event E_event;
 };
 
 #endif
