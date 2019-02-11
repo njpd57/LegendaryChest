@@ -114,6 +114,8 @@ Engine.o: C:/Users/Nicolas/Desktop/LegendaryChest/source/Engine.cpp \
  C:/devkitPro/portlibs/3ds/include/ogg/config_types.h \
  C:/devkitPro/portlibs/3ds/include/tremor/ivorbiscodec.h \
  C:/Users/Nicolas/Desktop/LegendaryChest/include/Engine.hpp \
+ C:/Users/Nicolas/Desktop/LegendaryChest/include/Player.hpp \
+ C:/Users/Nicolas/Desktop/LegendaryChest/include/Sounds.hpp \
  C:/Users/Nicolas/Desktop/LegendaryChest/include/Npc.hpp \
  C:/Users/Nicolas/Desktop/LegendaryChest/include/Database.hpp \
  C:/Users/Nicolas/Desktop/LegendaryChest/include/Map.hpp \
@@ -348,6 +350,10 @@ C:/devkitPro/portlibs/3ds/include/ogg/config_types.h:
 C:/devkitPro/portlibs/3ds/include/tremor/ivorbiscodec.h:
 
 C:/Users/Nicolas/Desktop/LegendaryChest/include/Engine.hpp:
+
+C:/Users/Nicolas/Desktop/LegendaryChest/include/Player.hpp:
+
+C:/Users/Nicolas/Desktop/LegendaryChest/include/Sounds.hpp:
 
 C:/Users/Nicolas/Desktop/LegendaryChest/include/Npc.hpp:
 

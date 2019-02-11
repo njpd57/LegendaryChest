@@ -2,6 +2,7 @@
 #include "Npc.hpp"
 
 extern SDL_Surface* loadImage(std::string ImageName);
+extern void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest,SDL_Rect* clip=NULL);
 
 npc::npc(std::string n_name,int n_h,int n_w,int n_frames)
 {
@@ -37,4 +38,19 @@ void npc::SetXY(int t_x,int t_y)
 {
     x   =   t_x;
     y   =   t_y;
+}
+void npc::Animate()
+{
+    Delay++;
+    if(Delay>= 5)
+    {
+        CurrFrame++;
+        Delay=0;
+    }
+    if(CurrFrame>=frames)CurrFrame=0;
+}
+void npc::Update(SDL_Surface* destin)
+{
+    Animate();
+    applySurface(x,y,npcSurface,destin,&npcFrame[CurrFrame]);
 }

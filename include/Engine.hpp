@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "Player.hpp"
 #ifndef ENGINE_H
 #define ENGINE_H
 
@@ -21,6 +22,7 @@
 #define S_Battle      5
 #define S_Indoor      6
 #define S_Map         7
+#define S_BattleDemo  8
 
 class Engine
 {
@@ -34,7 +36,10 @@ class Engine
         void GameLoop();
         void ClearScreen();
 
+        
+
         int GameState;
+
         bool running;
 
         //Graphics
@@ -46,18 +51,42 @@ class Engine
         SDL_Color TextColor;
 
         //GameStates
+            //CONTROL
+            bool C_ChangeState;
+            void ChangeState(int newState);
 
             void Intro();
 
-
+            //STARTMENU
             void StartMenu();
+
+            SDL_Surface* Menu_Background;
+
             SDL_Surface* gameTitle;
             SDL_Rect     gameTitleRect[10];
             int          gameTitleFrame;
 
+            SDL_Surface* cursor;
+            SDL_Rect     cursorRect[21];
+            int          cursorFrame;
+            int Cursor_X;
+            int Cursor_Y;
+            bool C_Selected;
+            int Cursor_Option;
+
+            SDL_Surface* menuOptions;
+            
+
+            //INDOOR
+
             void Indoor();
 
+            //BATTLEDEMO
             void Battle_Demo();
+            SDL_Surface* demoBattleBack;
+
+            //LOADSCREEN
+            SDL_Surface* loadScreen;
 
             
         int mouseX;
@@ -71,7 +100,7 @@ class Engine
 
         //Input
         void Menu_Input();
-
+        void DemoBattle_Input();
 
     private:
         
@@ -91,6 +120,8 @@ class Engine
 
         //Event Sys
         SDL_Event E_event;
+
+        
 };
 
 #endif

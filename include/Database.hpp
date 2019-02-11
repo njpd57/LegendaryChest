@@ -2,6 +2,7 @@
 
 #include "Map.hpp"
 #include "Npc.hpp"
+#include "Player.hpp"
 
 #ifndef DATABASE_H
 #define DATABASE_H
@@ -12,15 +13,19 @@
 
 
 npc Slime("Slime",32,32,5);
-npc SlimePlayer("Player",32,32,5);
+Player DemoPlayer;
 
-void loadNpc()
+
+void Data_loadPlayer()
+{
+    DemoPlayer.ANIM_Frames=0;
+    DemoPlayer.lastPos=0;
+    DemoPlayer.SetImage();
+}
+void Data_loadNpc()
 {
     Slime.SetImage("romfs:/Graphics/Sprites/Slime.png");
     Slime.SetATTR(25,0,5,5);
-
-    SlimePlayer.SetImage("romfs:/Graphics/Sprites/I_Slime.png");
-    SlimePlayer.SetATTR(25,0,5,5);
 };
 void unloadNpc(npc l_npc);
 #endif

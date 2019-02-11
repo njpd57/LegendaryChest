@@ -3,7 +3,6 @@
 int main(void)
 {
 	Engine MainEngine;
-	MainEngine.Init();
 	MainEngine.Intro();
 	MainEngine.GameLoop();
 	MainEngine.Quit();	

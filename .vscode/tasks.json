@@ -14,9 +14,18 @@
             }
         },
         {
-            "label": "Run",
+            "label": "Run NOGUI",
             "type": "shell",
             "command": "make run-nogui",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },        
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "make run",
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -32,7 +41,11 @@
             "label": "Run on 3DS",
             "type": "shell",
             "command": "make online",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         },
         {
             "label": "Make Cia",

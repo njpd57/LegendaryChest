@@ -113,7 +113,8 @@ main.o: C:/Users/Nicolas/Desktop/LegendaryChest/source/main.cpp \
  C:/devkitPro/portlibs/3ds/include/ogg/config_types.h \
  C:/devkitPro/portlibs/3ds/include/tremor/ivorbiscodec.h \
  C:/Users/Nicolas/Desktop/LegendaryChest/include/Engine.hpp \
- C:/Users/Nicolas/Desktop/LegendaryChest/include/main.hpp
+ C:/Users/Nicolas/Desktop/LegendaryChest/include/main.hpp \
+ C:/Users/Nicolas/Desktop/LegendaryChest/include/Player.hpp
 
 C:/Users/Nicolas/Desktop/LegendaryChest/include/main.hpp:
 
@@ -344,3 +345,5 @@ C:/devkitPro/portlibs/3ds/include/tremor/ivorbiscodec.h:
 C:/Users/Nicolas/Desktop/LegendaryChest/include/Engine.hpp:
 
 C:/Users/Nicolas/Desktop/LegendaryChest/include/main.hpp:
+
+C:/Users/Nicolas/Desktop/LegendaryChest/include/Player.hpp:
