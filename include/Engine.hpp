@@ -40,10 +40,10 @@ class Engine
         void Quit();
         void GameLoop();
         void ClearScreen();
-
+        void Intro();
         
 
-        int GameState;
+
 
         bool running;
 
@@ -59,10 +59,14 @@ class Engine
 
         //GameStates//
             //CONTROL
+            int GameState;
+            int OldState;
             bool C_ChangeState;
+            bool C_UnloadState;
             void LoadState(int newState);
-            void UnloadState(int oldState);
-            void Intro();
+            void UnloadState();
+            void ChangeState(int newState);
+            
             ////////////////////////////////
 
             //STARTMENU//////////////////
@@ -115,7 +119,7 @@ class Engine
             
         int mouseX;
         int mouseY;
-        int frame;
+
 
         void LoadImages();
         

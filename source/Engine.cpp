@@ -29,6 +29,7 @@ Engine::Engine()
 	srand (time(NULL));
 	
 	C_ChangeState	=	true;
+	C_UnloadState	= 	false;
 	running     	=	true;
 
 	//FADEOUT/FADEIN
@@ -68,13 +69,16 @@ void Engine::GameLoop()
 {
 	while(running)
 	{
-		if(C_ChangeState)LoadState(GameState);
+		LoadState(GameState);
+		
 		while(SDL_PollEvent(&E_event))
 		{
 			Input();
 		}		
 		Update();
 		Render();
+
+		UnloadState();
 	}
 }
 
@@ -165,7 +169,8 @@ void Engine::Update()
 {
 	switch(GameState)
 	{
-		case S_StartMenu:		
+		case S_StartMenu:
+			
 			applySurface(0,85,gameTitle,screen,&gameTitleRect[gameTitleFrame]);
 			applySurface(100,310,menuOptions,screen);
 			applySurface(Cursor_X,Cursor_Y,cursor,screen,&cursorRect[cursorFrame]);
@@ -199,9 +204,7 @@ void Engine::Update()
 				switch(Cursor_Option)
 				{
 					case 0:
-						GameState=S_Battle;
-						C_ChangeState=true;
-						
+						ChangeState(S_Battle);						
 						break;
 					case 1:
 						C_Selected=false;
@@ -216,12 +219,7 @@ void Engine::Update()
 						break;
 				}
 				/*
-				SDL_FreeSurface(Menu_Background);
-				SDL_FreeSurface(gameTitle);
-				SDL_FreeSurface(cursor);
-				SDL_FreeSurface(menuOptions[0]);
-				SDL_FreeSurface(menuOptions[1]);
-				SDL_FreeSurface(menuOptions[2]);
+
 				*/
 				C_Selected=false;
 			}
@@ -314,7 +312,7 @@ void Engine::Menu_Input()
 			switch(E_event.key.keysym.sym)
 			{
 				case SDLK_a:
-						PlaySound(SELECTED_WAV);
+						PlaySound(FX_SELECTED);
 						C_Selected=true;
 
 						break;
@@ -337,12 +335,12 @@ void Engine::Menu_Input()
 				case SDLK_RIGHT:	
 						break;
 				case SDLK_UP:
-						PlaySound(SELECT_WAV);
+						PlaySound(FX_SELECT);
 						Cursor_Option--;
 						if(Cursor_Option<0)Cursor_Option=2;	
 						break;
 				case SDLK_DOWN:
-						PlaySound(SELECT_WAV);
+						PlaySound(FX_SELECT);
 						Cursor_Option++;
 						if(Cursor_Option>2)Cursor_Option=0;
 						break;
@@ -381,8 +379,7 @@ void Engine::DemoBattle_Input()
 				case SDLK_r:			
 						break;
 				case SDLK_RETURN:
-						GameState=S_StartMenu;
-						C_ChangeState=true;
+						ChangeState(S_StartMenu);
 						break;
 				case SDLK_ESCAPE:			
 						break;
@@ -447,6 +444,7 @@ void Engine::LoadState(int newState)
 		switch(newState)
 		{
 			case S_StartMenu:
+				
 				Menu_Background=loadImage("romfs:/Graphics/Ui/Menu.png");
 				gameTitle=loadImage("romfs:/Graphics/Logos/gameTitle.png");
 				for(int i=0;i<=9;i++)
@@ -470,6 +468,9 @@ void Engine::LoadState(int newState)
 
 				//APPLY
 				applySurface(0,0,Menu_Background,screen);
+
+				LoadSong(MUS_ANOTHERCASTLE);
+				PlaySong();
 				
 				break;
 
@@ -484,7 +485,9 @@ void Engine::LoadState(int newState)
 				break;
 			case S_Battle:
 				Data_loadNpc();
-				Data_loadPlayer();				
+				Data_loadPlayer();
+
+				//Lo Tiene Que Hacer Una Funcion!!!!				
 				MenuState=0;
 				PlayerTurn=true;
 				BattleBackLoaded=false;
@@ -492,7 +495,7 @@ void Engine::LoadState(int newState)
 				Slime.SetXY(115,184);
 				P_Player.SetXY(241,183);
 				P_Player.moveLeft=true;
-
+				////////////////////////
 				
 				
 				BottomMenu[0]=loadImage("romfs:/Graphics/Ui/BattleMenu.png");
@@ -502,8 +505,46 @@ void Engine::LoadState(int newState)
 				BottomMenuRect.y=240;
 				
 		}
-		SDL_Delay(1000);
 		C_ChangeState=false;
+		SDL_Delay(1000);
+		
 	}
 	
+}
+
+void Engine::UnloadState()
+{
+	if(C_UnloadState)
+	{
+		switch(OldState)
+		{
+			case S_StartMenu:
+				C_Selected=false;
+				Cursor_Option=0;
+				Mix_HaltMusic();
+				SDL_FreeSurface(Menu_Background);
+				SDL_FreeSurface(gameTitle);
+				SDL_FreeSurface(menuOptions);
+				UnloadSong();
+				break;		
+			case S_Battle:
+				SDL_FreeSurface(BattleBack);
+				SDL_FreeSurface(BottomMenu[0]);
+				SDL_FreeSurface(BottomMenu[1]);
+				SDL_FreeSurface(BottomMenu[2]);
+			default:
+				break;
+		}
+
+		C_UnloadState=false;
+
+	}
+}
+
+void Engine::ChangeState(int newState)
+{
+	OldState=GameState;
+	GameState=newState;
+	C_ChangeState=true;
+	C_UnloadState=true;
 }
