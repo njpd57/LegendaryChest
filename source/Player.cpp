@@ -17,6 +17,10 @@ Player::Player()
     Alive   =   true;
     x       =   0;
     y       =   0;
+    moveRight  = false;
+    moveLeft   = false;
+    moveUp     = false;
+    moveDown   = false;
 
     ANIM_Frames     =   0;
     ANIM_Delay =   0;    

@@ -204,9 +204,13 @@ void Engine::Update()
 						
 						break;
 					case 1:
+						C_Selected=false;
+						break;
+						/*
 						GameState=S_OptionMenu;
 						C_ChangeState=true;
 						break;
+						*/
 					case 2:
 						running=false;
 						break;
@@ -219,7 +223,7 @@ void Engine::Update()
 				SDL_FreeSurface(menuOptions[1]);
 				SDL_FreeSurface(menuOptions[2]);
 				*/
-				
+				C_Selected=false;
 			}
 			break;
 
@@ -377,7 +381,8 @@ void Engine::DemoBattle_Input()
 				case SDLK_r:			
 						break;
 				case SDLK_RETURN:
-						running=false;			
+						GameState=S_StartMenu;
+						C_ChangeState=true;
 						break;
 				case SDLK_ESCAPE:			
 						break;
