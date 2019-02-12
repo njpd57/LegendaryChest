@@ -4,6 +4,7 @@
 extern SDL_Surface* loadImage(std::string ImageName);
 extern void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest,SDL_Rect* clip=NULL);
 
+#define IMAGE_DELAY 1
 npc::npc(std::string n_name,int n_h,int n_w,int n_frames)
 {
     NAME    =   n_name;
@@ -42,7 +43,7 @@ void npc::SetXY(int t_x,int t_y)
 void npc::Animate()
 {
     Delay++;
-    if(Delay>= 5)
+    if(Delay>= IMAGE_DELAY)
     {
         CurrFrame++;
         Delay=0;
@@ -53,4 +54,17 @@ void npc::Update(SDL_Surface* destin)
 {
     Animate();
     applySurface(x,y,npcSurface,destin,&npcFrame[CurrFrame]);
+}
+
+int npc::Attack()
+{
+    int Damage = rand () % STR;
+    return Damage;
+}
+
+int npc::Attacked(int DMG)
+{
+    int Protected = rand() % DEF;
+    int Damage = DMG - DEF;
+    if(Damage > 0)HP-=Damage;
 }

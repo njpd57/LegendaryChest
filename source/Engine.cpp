@@ -4,9 +4,6 @@
 #include "Npc.hpp"
 #include "Database.hpp"
 
-
-
-
 Engine::Engine()
 {
     romfsInit();
@@ -17,7 +14,7 @@ Engine::Engine()
 	
     SDL_ShowCursor(SDL_DISABLE);
 	SoundInit();
-    screen      = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_DUALSCR |SDL_FITHEIGHT);// SDL_FITWIDTH);
+    screen      = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_DUALSCR |SDL_FITHEIGHT );// SDL_FITWIDTH);
     
     screenRect.x= 0;
     screenRect.y= 0;
@@ -29,7 +26,7 @@ Engine::Engine()
     ClearColor  = SDL_MapRGB(screen->format,0,0,0);
     SDL_FillRect(screen,&screenRect,ClearColor);
     SDL_Flip(screen);
-
+	srand (time(NULL));
 	
 	C_ChangeState	=	true;
 	running     	=	true;
@@ -71,7 +68,7 @@ void Engine::GameLoop()
 {
 	while(running)
 	{
-		if(C_ChangeState)ChangeState(GameState);
+		if(C_ChangeState)LoadState(GameState);
 		while(SDL_PollEvent(&E_event))
 		{
 			Input();
@@ -80,7 +77,11 @@ void Engine::GameLoop()
 		Render();
 	}
 }
-//GameStates
+
+
+//				GAMESTATES			//
+
+//		INTRO		//
 void Engine::Intro()
 {
 	IntroImage=loadImage("romfs:/Graphics/Logos/studioLogo.png");
@@ -98,18 +99,50 @@ void Engine::Intro()
 	}
 }
 
-void Engine::StartMenu()
+//		BATTLE		//
+
+void Engine::Battle()
 {
-	ClearScreen();
-	SDL_Surface* MenuScreen=loadImage("romfs:/Graphics/Ui/WhiteLaion.png");
-	applySurface(0,0,MenuScreen,screen);
-	SDL_Flip(screen);
-	bool Done(false);
-	while(!Done)
+	
+	if(!BattleBackLoaded)
 	{
-		SDL_Delay(3000);
+		LoadBattleBack();
+	}
+	SDL_BlitSurface(BattleBack,NULL,screen,NULL);
+	switch(MenuState)
+	{
+		case B_Menu:
+			SDL_BlitSurface(BottomMenu[0],NULL,screen,&BottomMenuRect);
+			break;
+		case B_Objects:
+			SDL_BlitSurface(BottomMenu[1],NULL,screen,&BottomMenuRect);
+			break;
+		case B_Habilities:
+			SDL_BlitSurface(BottomMenu[2],NULL,screen,&BottomMenuRect);
+			break;
+	}
+	
+	
+	P_Player.Update(screen);
+	Slime.Update(screen);
+}
+void Engine::LoadBattleBack()
+{
+	switch(T_BattleBack)
+	{
+		case BB_DEMOFORREST:
+			BattleBack=loadImage("romfs:/Graphics/Battlebacks/Forres_fxt.png");
+			BattleBackLoaded=true;
+			break;
+		default:
+			BattleBackLoaded=true;
+			break;
 	}
 }
+
+/////////////////////////////////////////////////////
+
+
 void Engine::Input()
 {
 	switch(GameState)
@@ -120,7 +153,11 @@ void Engine::Input()
 		case S_BattleDemo:
 			DemoBattle_Input();
 			break;
+		case S_Battle:
+			DemoBattle_Input();
+			break;
 		default:
+
 			break;
 	}
 }
@@ -162,7 +199,7 @@ void Engine::Update()
 				switch(Cursor_Option)
 				{
 					case 0:
-						GameState=S_BattleDemo;
+						GameState=S_Battle;
 						C_ChangeState=true;
 						
 						break;
@@ -191,6 +228,8 @@ void Engine::Update()
 			Slime.Update(screen);
 			DemoPlayer.Update(screen);
 			break;
+		case S_Battle:
+			Battle();
 		default:
 			break;
 	}
@@ -325,6 +364,7 @@ void Engine::DemoBattle_Input()
 			switch(E_event.key.keysym.sym)
 			{
 				case SDLK_a:
+						
 						break;
 				case SDLK_b:					
 						break;
@@ -342,12 +382,16 @@ void Engine::DemoBattle_Input()
 				case SDLK_ESCAPE:			
 						break;
 				case SDLK_LEFT:
+						P_Player.moveLeft=true;
 						break;
 				case SDLK_RIGHT:
+						P_Player.moveRight=true;
 						break;
 				case SDLK_UP:
+						P_Player.moveUp=true;
 						break;
 				case SDLK_DOWN:
+						P_Player.moveDown=true;
 						break;
 				default:
 						break;
@@ -357,12 +401,16 @@ void Engine::DemoBattle_Input()
 				switch(E_event.key.keysym.sym)
 				{
 				case SDLK_LEFT:
+						P_Player.moveLeft=false;
 						break;
 				case SDLK_RIGHT:
+						P_Player.moveRight=false;
 						break;
 				case SDLK_UP:
+						P_Player.moveUp=false;
 						break;
 				case SDLK_DOWN:
+						P_Player.moveDown=false;
 						break;
 				default:
 						break;
@@ -377,12 +425,14 @@ void Engine::DemoBattle_Input()
 	}
 }
 
+
+
 //INPUT EXAMPLE
 
 
 
 
-void Engine::ChangeState(int newState)
+void Engine::LoadState(int newState)
 {
 	if(C_ChangeState)
 	{
@@ -427,6 +477,25 @@ void Engine::ChangeState(int newState)
 				DemoPlayer.SetXY(241,183);
 				DemoPlayer.moveLeft=true;
 				break;
+			case S_Battle:
+				Data_loadNpc();
+				Data_loadPlayer();				
+				MenuState=0;
+				PlayerTurn=true;
+				BattleBackLoaded=false;
+				T_BattleBack=BB_DEMOFORREST;
+				Slime.SetXY(115,184);
+				P_Player.SetXY(241,183);
+				P_Player.moveLeft=true;
+
+				
+				
+				BottomMenu[0]=loadImage("romfs:/Graphics/Ui/BattleMenu.png");
+				BottomMenu[1]=loadImage("romfs:/Graphics/Ui/BattleMenuObjects.png");
+				BottomMenu[2]=loadImage("romfs:/Graphics/Ui/BattleMenuHabilities.png");
+				BottomMenuRect.x=40;
+				BottomMenuRect.y=240;
+				
 		}
 		SDL_Delay(1000);
 		C_ChangeState=false;

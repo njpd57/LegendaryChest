@@ -5,13 +5,15 @@
 extern SDL_Surface* loadImage(std::string ImageName);
 extern void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest,SDL_Rect* clip=NULL);
 
+
 Player::Player()
 {
     Name    =   "Logic";
-    Hp      =   10;
-    Mp      =   10;
+    LVL     =   1;
+    HP      =   10;
+    MP      =   10;
     STR     =   5;
-    DEX     =   5;
+    DEF     =   5;
     Alive   =   true;
     x       =   0;
     y       =   0;
@@ -41,11 +43,12 @@ void Player::SetXY(int S_x,int S_y)
 }
 
 
+//          MOVEMENT        //
 void Player::MoveDown()
 {
 
     ANIM_Delay++;
-    if(ANIM_Delay >= 5)
+    if(ANIM_Delay >= 1)
     {
         ANIM_Delay=0;
         ANIM_Frames++;
@@ -55,7 +58,7 @@ void Player::MoveDown()
 void Player::MoveLeft()
 {
     ANIM_Delay++;
-    if(ANIM_Delay >= 5)
+    if(ANIM_Delay >= 1)
     {
         ANIM_Delay=0;
         ANIM_Frames++;
@@ -66,7 +69,7 @@ void Player::MoveRight()
 {
     
     ANIM_Delay++;
-    if(ANIM_Delay >= 5)
+    if(ANIM_Delay >= 1)
     {
         ANIM_Delay=0;
         ANIM_Frames++;
@@ -79,7 +82,7 @@ void Player::MoveUp()
     
     ANIM_Delay++;
 
-    if(ANIM_Delay >= 5)
+    if(ANIM_Delay >= 1)
     {
         ANIM_Delay=0;
         ANIM_Frames++;
@@ -115,7 +118,26 @@ void Player::Move()
         ANIM_Frames=lastPos;
     }
 }
+//////////////////////////////////////////////////////
 
+int Player::Attack()
+{
+    int Damage = rand () % STR;
+    return Damage;
+}
+
+int Player::Attacked(int DMG)
+{
+    int Protected = rand() % DEF;
+    int Damage = DMG - DEF;
+    if(Damage > 0)HP-=Damage;
+}
+
+void Player::LevelUp()
+{
+    LVL++;
+    HP+=LVL*15;
+}
 void Player::Update(SDL_Surface* U_Screen)
 {
     Move();

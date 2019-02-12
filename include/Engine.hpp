@@ -24,6 +24,11 @@
 #define S_Map         7
 #define S_BattleDemo  8
 
+//MENUSTATES
+#define B_Menu       0
+#define B_Objects    1
+#define B_Habilities 2
+
 class Engine
 {
     public:
@@ -42,23 +47,25 @@ class Engine
 
         bool running;
 
-        //Graphics
+        //Graphics//
         SDL_Surface* screen;
         SDL_Rect    screenRect;
-        
-        //Texts
+        ///////////////////////
+
+        //Texts//
         TTF_Font* font;
         SDL_Color TextColor;
+        //////////////////////
 
-        //GameStates
+        //GameStates//
             //CONTROL
             bool C_ChangeState;
-            void ChangeState(int newState);
-
+            void LoadState(int newState);
+            void UnloadState(int oldState);
             void Intro();
+            ////////////////////////////////
 
-            //STARTMENU
-            void StartMenu();
+            //STARTMENU//////////////////
 
             SDL_Surface* Menu_Background;
 
@@ -73,9 +80,26 @@ class Engine
             int Cursor_Y;
             bool C_Selected;
             int Cursor_Option;
+            ///////////////////////////////
 
             SDL_Surface* menuOptions;
-            
+
+            //Battle System
+
+            int MenuState;
+            void Battle();  //(SDL_Surface* Battleback,SDL_Music BattleMusic,int EnemyCount,npc Enemys[5])
+            void LoadBattleBack();
+            int T_BattleBack;
+            SDL_Surface* BattleBack;
+            bool BattleBackLoaded;
+            bool PlayerTurn;
+
+                //  TEXT    //
+
+                //  IMAGES  //
+                SDL_Surface* BottomMenu[3];
+                SDL_Rect     BottomMenuRect;
+            ////////////////////////
 
             //INDOOR
 

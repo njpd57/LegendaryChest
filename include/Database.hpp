@@ -8,12 +8,17 @@
 #define DATABASE_H
 
 
+//      NPC     //
 #define NPC_SLIME   0
+////////////////////////////////////////////////////////////
 
+//      BattleBacks //
+#define BB_DEMOFORREST  0
 
 
 npc Slime("Slime",32,32,5);
 Player DemoPlayer;
+Player P_Player;
 
 
 void Data_loadPlayer()
@@ -21,11 +26,16 @@ void Data_loadPlayer()
     DemoPlayer.ANIM_Frames=0;
     DemoPlayer.lastPos=0;
     DemoPlayer.SetImage();
+
+    P_Player.ANIM_Frames=0;
+    P_Player.lastPos=0;
+    P_Player.SetImage();
+    P_Player.moveLeft=true;
 }
 void Data_loadNpc()
 {
     Slime.SetImage("romfs:/Graphics/Sprites/Slime.png");
-    Slime.SetATTR(25,0,5,5);
+    Slime.SetATTR(25,0,3,3);
 };
 void unloadNpc(npc l_npc);
 #endif

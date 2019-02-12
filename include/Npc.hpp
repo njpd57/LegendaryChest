@@ -14,6 +14,8 @@ class npc
         void Animate();
         void Update(SDL_Surface* destin);
 
+        int Attack();
+        int Attacked(int DMG);
 
         
         //IMAGE INFO
@@ -29,8 +31,11 @@ class npc
         int x;
         int y;
         //STATS
+        
         std::string NAME;
         bool ALIVE;
+
+        int LVL;
         int HP;
         int MP;
         int STR;

@@ -16,6 +16,10 @@ class Player
         void MoveDown();
         void Move();
 
+        int Attack();
+        int Attacked(int DMG);
+        void LevelUp();
+
         void BattleAnim(bool Left);
         void Update(SDL_Surface* U_Screen);
 
@@ -34,11 +38,15 @@ class Player
     private:
         //STATS
         std::string Name;
-        int Hp;
-        int Mp;
-        int STR;
-        int DEX;
+
+        int LVL;   //NIVEL
+        int HP;     //VIDA
+        int MP;     //MAGIA PARA HABILIDADES
+        int STR;    // FUERZA PARA DAÑO
+        int DEF;    // Defensa
         bool Alive;
+
+
 
         //POS
         int x;
