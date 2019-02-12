@@ -470,6 +470,7 @@ void Engine::LoadState(int newState)
 				applySurface(0,0,Menu_Background,screen);
 
 				LoadSong(MUS_ANOTHERCASTLE);
+				SDL_Delay(500);
 				PlaySong();
 				
 				break;
@@ -537,6 +538,7 @@ void Engine::UnloadState()
 		}
 
 		C_UnloadState=false;
+
 
 	}
 }
