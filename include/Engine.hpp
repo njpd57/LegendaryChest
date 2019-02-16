@@ -87,6 +87,7 @@ class Engine
             ///////////////////////////////
 
             SDL_Surface* menuOptions;
+            
 
             //Battle System
 
@@ -103,7 +104,6 @@ class Engine
                 //  IMAGES  //
                 SDL_Surface* BottomMenu[3];
                 SDL_Rect     BottomMenuRect;
-            ////////////////////////
 
             //INDOOR
 

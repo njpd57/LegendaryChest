@@ -126,6 +126,7 @@ void Player::Move()
 
 int Player::Attack()
 {
+    
     int Damage = rand () % STR;
     return Damage;
 }

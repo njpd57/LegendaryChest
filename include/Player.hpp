@@ -9,6 +9,7 @@ class Player
         Player();
         void SetImage();
         void SetXY(int S_x,int S_y);
+        void BattleMode();
 
         void MoveLeft();
         void MoveRight();

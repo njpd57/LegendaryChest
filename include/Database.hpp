@@ -17,19 +17,15 @@
 
 
 npc Slime("Slime",32,32,5);
-Player DemoPlayer;
 Player P_Player;
 
 
 void Data_loadPlayer()
 {
-    DemoPlayer.ANIM_Frames=0;
-    DemoPlayer.lastPos=0;
-    DemoPlayer.SetImage();
-
     P_Player.ANIM_Frames=0;
     P_Player.lastPos=0;
     P_Player.SetImage();
+    P_Player.SetXY(241,183);
     P_Player.moveLeft=true;
 }
 void Data_loadNpc()
